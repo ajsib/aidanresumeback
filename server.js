@@ -12,7 +12,7 @@ dotenv.config();
 const User = require('./models/user');
 
 // Create an instance of the Express application
-const app = express();  
+const app = express();   
 
 // Set the port for the server to listen on. If the PORT environment variable is not defined,
 // the server will use port 3000 as a default.
