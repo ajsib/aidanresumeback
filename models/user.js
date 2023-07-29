@@ -31,7 +31,7 @@ userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(10);
 
   // Hash the user's password using the generated salt
-  const hashedPassword = await bcrypt.hash(user.password, salt);
+  const hashedPassword = await bcrypt.hash(user.password, salt); 
 
   // Replace the original password with the hashed password in the user document
   user.password = hashedPassword;
