@@ -9,17 +9,27 @@ const dotenv = require('dotenv'); // Library to load environment variables from 
 dotenv.config();
 
 // Create the User model (as described in Step 4)
-// [User model is not provided in this code snippet, but it should be created.]
+const User = require('./models/user');
 
 // Create an instance of the Express application
-const app = express();
+const app = express();  
 
 // Set the port for the server to listen on. If the PORT environment variable is not defined,
 // the server will use port 3000 as a default.
 const port = process.env.PORT || 3000;
 
-// Connect to the MongoDB database (as described in Step 3)
-// [Code for connecting to the MongoDB database is not provided in this snippet, but it should be added before app.listen()]
+// Connect to the MongoDB database using the connection string from the .env file
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,  // Use the new URL parser
+    useUnifiedTopology: true,  // Use the new server discovery and monitoring engine
+  })
+    .then(() => {  // The connection was successful
+      console.log('Connected to MongoDB');
+    })
+    .catch((error) => {  // The connection was unsuccessful
+      console.error('Error connecting to MongoDB:', error);
+    });
+  
 
 // Middleware to parse incoming JSON data
 app.use(express.json());
@@ -78,11 +88,11 @@ app.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
 });
 
-// app.all() is a special routing method that is used to load middleware functions
-// It is called every time a request is received on any route (in this example, it is used to handle 404 Not Found errors)
-app.all('*', (req, res) => {
-    res.status(404).json({ message: 'Not Found' });
-  });
+// // app.all() is a special routing method that is used to load middleware functions
+// // It is called every time a request is received on any route (in this example, it is used to handle 404 Not Found errors)
+// app.all('*', (req, res) => {
+//     res.status(404).json({ message: 'Not Found' });
+//   });
   
 // Start the server and make it listen on the specified port
 app.listen(port, () => {
