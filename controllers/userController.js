@@ -54,9 +54,15 @@ exports.login = async (req, res) => {
 
 // Function for user logout
 exports.logout = (req, res) => {
-  // In this example, we do nothing for simplicity
-  return res.status(200).json({ message: 'Logout successful' });
-};
+    try {
+      // You may add any additional logic here, such as clearing cookies or session data, if needed.
+  
+      return res.status(200).json({ message: 'Logout successful' });
+    } catch (error) {
+      console.error('Error during logout:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
 
 // Function for getting user information
 exports.getUser = async (req, res) => {
