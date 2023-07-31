@@ -1,3 +1,4 @@
+// user.js
 // Import necessary modules and libraries
 const mongoose = require('mongoose'); // Mongoose library for MongoDB interaction
 const bcrypt = require('bcryptjs'); // Library for hashing passwords

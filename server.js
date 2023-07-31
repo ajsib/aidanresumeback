@@ -1,9 +1,11 @@
+// server.js
 // Import necessary modules and libraries
 const express = require('express'); // Express.js web framework
 const mongoose = require('mongoose'); // Mongoose library for MongoDB interaction
 const bcrypt = require('bcryptjs'); // Library for hashing passwords
 const jwt = require('jsonwebtoken'); // Library for working with JSON Web Tokens
 const dotenv = require('dotenv'); // Library to load environment variables from .env file
+
 
 // Load environment variables from .env file
 dotenv.config();
@@ -88,11 +90,43 @@ app.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
 });
 
-// // app.all() is a special routing method that is used to load middleware functions
-// // It is called every time a request is received on any route (in this example, it is used to handle 404 Not Found errors)
-// app.all('*', (req, res) => {
-//     res.status(404).json({ message: 'Not Found' });
-//   });
+// Route: /user - Get the information of the current logged-in user
+app.get('/user', authenticateToken, async (req, res) => {
+    try {
+      // req.user contains the user's ID extracted from the JWT token during the authentication process
+      const user = await User.findById(req.user.userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Return the user's information (excluding the password)
+      const { _id, username } = user;
+      return res.status(200).json({ _id, username });
+    } catch (error) {
+      console.error('Error while fetching user:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  // Middleware to authenticate the JWT token in the request's headers
+  function authenticateToken(req, res, next) {
+    const token = req.header('Authorization');
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+  
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+      if (err) {
+        return res.status(403).json({ message: 'Invalid token' });
+      }
+  
+      // Add the user's ID from the token payload to the request object for use in the /user route
+      req.user = user;
+      next();
+    });
+  }
   
 // Start the server and make it listen on the specified port
 app.listen(port, () => {
