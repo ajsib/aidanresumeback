@@ -2,11 +2,14 @@
 // Import necessary modules and libraries
 const express = require('express'); // Express.js web framework
 const mongoose = require('mongoose'); // Mongoose library for MongoDB interaction
+const cors = require('cors'); // Library for enabling CORS (Cross-Origin Resource Sharing)
 const { MONGODB_URI } = require('./config/env'); // Import the MongoDB URI from the environment configuration
 const userRoutes = require('./routes/userRoutes'); // Import userRoutes for handling user-related API endpoints
 
 // Create an instance of the Express application
 const app = express();
+
+app.use(cors()); // Enable CORS for all requests this allows the frontend to access the API from a different origin
 
 // Middleware to parse incoming JSON data in the request body
 // This allows the server to understand JSON data sent in requests

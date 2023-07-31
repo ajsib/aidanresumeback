@@ -2,9 +2,11 @@
 
 To the backend side of onlytext!
 
----
 
-### Dev Notes:
+
+### Current Dev Notes:
+
+---
 
 `config/`:
 - Purpose: This directory is for managing environment configurations and storing variables related to your application's configuration, such as database connection strings, API keys, and other settings.
@@ -45,3 +47,20 @@ Future File Placement:
 For future functionalities or features of your website, you can create new files in the appropriate directories. For example, if you want to add functionality related to products, you could create a new file in routes/ called productRoutes.js and a corresponding productController.js in the controllers/ directory. If you need additional utilities specific to products, you can create a new file in utils/.
 When creating new routes and controllers, make sure to export them and import them in server.js to make them accessible to the application.
 Remember to follow the modular structure, and keep related code organized in their respective directories to maintain a clean and organized codebase.
+
+---
+
+- CORS (Cross-Origin Resource Sharing) should be configured at production to allow requests from only specific domains: 
+
+```JavaScript
+app.use(
+  cors({
+    origin: 'https://your-nextjs-frontend-domain.com',
+    // You can also add additional options here if needed
+  })
+);
+```
+
+---
+
+Note that storing JWTs in localStorage is a controversial topic and some people advise against it due to the potential for cross-site scripting (XSS) attacks. In a more sophisticated setup, you might want to use HTTP-only cookies to store your JWTs, as these cannot be accessed through JavaScript. Please make sure to do additional research and choose the best method for your use case.
