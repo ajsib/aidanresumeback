@@ -1,3 +1,4 @@
+// ./routes/profileRoutes.js
 const express = require('express');
 const router = express.Router();
 const { createProfile, getProfile, getProfileName, getProfileSchool, getProfileInterests, getProfileProudOf, getProfilePhotos } = require('../controllers/profileController');
