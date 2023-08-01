@@ -9,8 +9,7 @@ const userRoutes = require('./routes/userRoutes'); // Import userRoutes for hand
 // Create an instance of the Express application
 const app = express();
 
-app.use(cors({
-  origin: 'https://www.ajsibley.com/'
+app.use(cors({ origin: '*'
 })); // Enable CORS for all requests this allows the frontend to access the API from a different origin
 
 // Middleware to parse incoming JSON data in the request body
