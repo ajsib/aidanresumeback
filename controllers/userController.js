@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs'); // Library for hashing passwords
 // Function for user registration
 exports.register = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     // Check if the username already exists in the database
     const existingUser = await User.findOne({ username });
@@ -14,8 +14,14 @@ exports.register = async (req, res) => {
       return res.status(409).json({ message: 'Username already exists' });
     }
 
+    // Check if the email already exists in the database
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+        return res.status(409).json({ message: 'Email already exists' });
+    }
+
     // Create a new user and save it to the database
-    const newUser = new User({ username, password });
+    const newUser = new User({ username, password, email, dateJoined: Date.now(), isNewUser: true });
     await newUser.save();
 
     return res.status(201).json({ message: 'User registered successfully' });
@@ -28,13 +34,15 @@ exports.register = async (req, res) => {
 // Function for user login
 exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { usernameOrEmail, password } = req.body;
 
-    // Check if the username exists in the database
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+    // Check if the username or email exists in the database
+    const user = await User.findOne({
+        $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
+      });
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid Credentials' });
+      }
 
     // Check if the provided password matches the hashed password in the database
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -75,8 +83,8 @@ exports.getUser = async (req, res) => {
     }
 
     // Return the user's information (excluding the password)
-    const { _id, username } = user;
-    return res.status(200).json({ _id, username });
+    const { _id, username, email, isNewUser, dateJoined } = user;
+    return res.status(200).json({ _id, username, email, isNewUser, dateJoined });
   } catch (error) {
     console.error('Error while fetching user:', error);
     return res.status(500).json({ message: 'Internal server error' });

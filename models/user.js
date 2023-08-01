@@ -17,6 +17,26 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // 'email' field of type String, which is required (must be present in the document)
+  // and should be unique (no two documents can have the same email value)
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  // date joined field of type Date, which is required (must be present in the document)
+  dateJoined: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  // is new user field of type Boolean, which is required (must be present in the document)
+  // and should be set to true by default
+  isNewUser: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
 });
 
 // Hash the password before saving it to the database
