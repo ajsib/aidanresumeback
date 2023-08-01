@@ -7,13 +7,21 @@ const mongoose = require('mongoose');
 // The ProfileSchema will define the structure of the Profile documents in the MongoDB collection
 const ProfileSchema = mongoose.Schema({
   // firstName field of type String: Represents the first name of the user associated with the profile
-  firstName: String,
+  firstName: {
+    type: String,
+    required: true,
+  },
 
   // school field of type String: Represents the school of the user associated with the profile
-  school: String,
+  school: {
+    type: String,
+    required: true,
+  },
 
   // interests field of type String: Represents the interests of the user associated with the profile
-  interests: String,
+  interests: {
+    type: [String]
+  },
 
   // proudOf field of type String: Represents something the user is proud of
   proudOf: String,
@@ -25,7 +33,11 @@ const ProfileSchema = mongoose.Schema({
   // user field of type ObjectId: Represents a reference to a User document in the MongoDB collection
   // This establishes a relationship between the Profile and User collections
   // The `ref: 'User'` indicates that this ObjectId references the 'User' model (collection)
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  user: {
+     type: mongoose.Schema.Types.ObjectId,
+     ref: 'User',
+     required: true,
+    },
 });
 
 // Export the Profile model to make it available for other parts of the application
