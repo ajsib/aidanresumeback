@@ -5,6 +5,7 @@ const mongoose = require('mongoose'); // Mongoose library for MongoDB interactio
 const cors = require('cors'); // Library for enabling CORS (Cross-Origin Resource Sharing)
 const { MONGODB_URI } = require('./config/env'); // Import the MongoDB URI from the environment configuration
 const userRoutes = require('./routes/userRoutes'); // Import userRoutes for handling user-related API endpoints
+const profileRoutes = require('./routes/profileRoutes'); // Import profileRoutes for handling profile-related API endpoints
 
 // Create an instance of the Express application
 const app = express();
@@ -30,7 +31,8 @@ mongoose
   });
 
 // Use the userRoutes for handling API requests with '/api' as the base URL
-app.use('/api', userRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/profile', profileRoutes);
 
 // Define the port number where the server will listen for incoming requests
 // If the PORT environment variable is not defined, the server will use port 3000 as a default.

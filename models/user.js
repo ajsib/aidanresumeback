@@ -17,9 +17,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // 'email' field of type String, which is required (must be present in the document)
+  // 'email or phone' field of type String, which is required (must be present in the document)
   // and should be unique (no two documents can have the same email value)
-  email: {
+  emailPhone: {
     type: String,
     required: true,
     unique: true,
@@ -37,6 +37,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: true,
   },
+
+  profile:  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile',
+    default: null,
+  }
 });
 
 // Hash the password before saving it to the database

@@ -3,10 +3,9 @@ const User = require('../models/user'); // Import the User model
 const jwt = require('../utils/jwt'); // Import JWT utility for generating and verifying JSON Web Tokens
 const bcrypt = require('bcryptjs'); // Library for hashing passwords
 
-// Function for user registration
 exports.register = async (req, res) => {
   try {
-    const { username, password, email } = req.body;
+    const { username, password, emailPhone } = req.body;
 
     // Check if the username already exists in the database
     const existingUser = await User.findOne({ username });
@@ -14,14 +13,14 @@ exports.register = async (req, res) => {
       return res.status(409).json({ message: 'Username already taken, please try a new one!' });
     }
 
-    // Check if the email already exists in the database
-    const existingEmail = await User.findOne({ email });
-    if (existingEmail) {
-        return res.status(409).json({ message: 'Email already registered! Please log in' });
+    // Check if the email or phone already exists in the database
+    const existingEmailPhone = await User.findOne({ emailPhone });
+    if (existingEmailPhone) {
+      return res.status(409).json({ message: 'Email or phone already registered! Please log in' });
     }
 
     // Create a new user and save it to the database
-    const newUser = new User({ username, password, email, dateJoined: Date.now(), isNewUser: true });
+    const newUser = new User({ username, password, emailPhone, dateJoined: Date.now(), isNewUser: true });
     await newUser.save();
 
     return res.status(201).json({ message: 'User registered successfully' });

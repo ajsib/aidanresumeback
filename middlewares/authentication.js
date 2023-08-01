@@ -1,4 +1,4 @@
-// authentication.js
+// ./middlewares/authentication.js
 const jwt = require('../utils/jwt');
 
 module.exports = function authenticateToken(req, res, next) {
