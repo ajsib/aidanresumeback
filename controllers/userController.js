@@ -3,6 +3,7 @@ const User = require('../models/user'); // Import the User model
 const jwt = require('../utils/jwt'); // Import JWT utility for generating and verifying JSON Web Tokens
 const bcrypt = require('bcryptjs'); // Library for hashing passwords
 
+// Function for user registration
 exports.register = async (req, res) => {
   try {
     const { username, password, emailPhone } = req.body;
@@ -37,7 +38,7 @@ exports.login = async (req, res) => {
 
     // Check if the username or email exists in the database
     const user = await User.findOne({
-        $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
+        $or: [{ username: usernameOrEmail }, { emailPhone: usernameOrEmail }]
       });
       if (!user) {
         return res.status(401).json({ message: 'Invalid Credentials' });
@@ -82,8 +83,8 @@ exports.getUser = async (req, res) => {
     }
 
     // Return the user's information (excluding the password)
-    const { _id, username, email, isNewUser, dateJoined } = user;
-    return res.status(200).json({ _id, username, email, isNewUser, dateJoined });
+    const { _id, username, emailPhone, isNewUser, dateJoined } = user;
+    return res.status(200).json({ _id, username, emailPhone, isNewUser, dateJoined });
   } catch (error) {
     console.error('Error while fetching user:', error);
     return res.status(500).json({ message: 'Internal server error' });

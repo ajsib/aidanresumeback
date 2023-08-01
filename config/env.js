@@ -10,5 +10,5 @@ module.exports = {
   MONGODB_URI: process.env.MONGODB_URI,
 
   // Export the value of the 'JWT_SECRET' environment variable, which is used for signing and verifying JSON Web Tokens (JWT)
-  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_SECRET: process.env.JWT_SECRET, 
 };
