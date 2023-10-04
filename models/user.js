@@ -5,6 +5,11 @@ const bcrypt = require('bcryptjs'); // Library for hashing passwords
 
 // Define the user schema using Mongoose Schema constructor
 const userSchema = new mongoose.Schema({
+  // 'posts' field of type Array, which contains references to the 'Post' model
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
+  }],
   // 'username' field of type String, which is required (must be present in the document)
   // and should be unique (no two documents can have the same username value)
   username: {

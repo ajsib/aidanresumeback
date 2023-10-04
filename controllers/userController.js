@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
     // Check if the username or email exists in the database
     const user = await User.findOne({
         $or: [{ username: usernameOrEmail }, { emailPhone: usernameOrEmail }]
-      });
+      }).populate('profile');
       if (!user) {
         return res.status(401).json({ message: 'Invalid Credentials' });
       }
@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
     // Create a JWT token with the user's ID as the payload
     const token = jwt.signToken({ userId: user._id });
 
-    return res.status(200).json({ token });
+    return res.status(200).json({ token, profile: user.profile });
   } catch (error) {
     console.error('Error during login:', error);
     return res.status(500).json({ message: 'Internal server error' });

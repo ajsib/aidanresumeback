@@ -26,8 +26,12 @@ exports.createProfile = async (req, res) => {
   user.profile = newProfile._id;
   await user.save();
 
-  return res.status(200).json({ message: 'Profile created successfully' });
+  return res.status(200).json({ 
+    message: 'Profile created successfully',
+    profile: newProfile // Adding the newly created profile here
+  });
 };
+
 
 // Function to get a user's profile
 exports.getProfile = async (req, res) => {
