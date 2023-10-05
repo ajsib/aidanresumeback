@@ -20,16 +20,43 @@ exports.register = async (req, res) => {
       return res.status(409).json({ message: 'Email or phone already registered! Please log in' });
     }
 
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create a new user and save it to the database
-    const newUser = new User({ username, password, emailPhone, dateJoined: Date.now(), isNewUser: true });
+    const newUser = new User({ 
+      username, 
+      password: hashedPassword, 
+      emailPhone, 
+      dateJoined: Date.now(), 
+      isNewUser: true 
+    });
     await newUser.save();
 
-    return res.status(201).json({ message: 'User registered successfully' });
+    // Generate a JWT token
+    const token = jwt.signToken({ userId: newUser._id });
+
+    // Prepare user data to send back; omitting password and other sensitive data
+    const userData = {
+      _id: newUser._id,
+      username: newUser.username,
+      emailPhone: newUser.emailPhone,
+      isNewUser: newUser.isNewUser,
+      dateJoined: newUser.dateJoined,
+      // Add other fields as required but omit sensitive ones
+    };
+
+    return res.status(201).json({ 
+      message: 'User registered successfully',
+      token,
+      user: userData 
+    });
   } catch (error) {
     console.error('Error during registration:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 // Function for user login
 exports.login = async (req, res) => {
@@ -40,9 +67,10 @@ exports.login = async (req, res) => {
     const user = await User.findOne({
         $or: [{ username: usernameOrEmail }, { emailPhone: usernameOrEmail }]
       }).populate('profile');
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid Credentials' });
-      }
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid Credentials' });
+    }
 
     // Check if the provided password matches the hashed password in the database
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -53,12 +81,23 @@ exports.login = async (req, res) => {
     // Create a JWT token with the user's ID as the payload
     const token = jwt.signToken({ userId: user._id });
 
-    return res.status(200).json({ token, profile: user.profile });
+    // Prepare user data to send back; omitting password and other sensitive data
+    const userData = {
+      _id: user._id,
+      username: user.username,
+      emailPhone: user.emailPhone,
+      isNewUser: user.isNewUser,
+      dateJoined: user.dateJoined,
+      // Add other fields as required but omit sensitive ones
+    };
+
+    return res.status(200).json({ token, profile: user.profile, user: userData });
   } catch (error) {
     console.error('Error during login:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 // Function for user logout
 exports.logout = (req, res) => {
