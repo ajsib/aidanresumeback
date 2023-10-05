@@ -16,6 +16,8 @@ exports.createProfile = async (req, res) => {
     yearOfStudy,
     bio,
     profilePhoto,
+    username: user.username,
+    dateJoined: user.dateJoined,
     user: user._id,
   });
 

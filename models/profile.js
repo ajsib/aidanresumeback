@@ -19,41 +19,11 @@ const ProfileSchema = mongoose.Schema({
   profilePhoto: {
     type: String,
   },
-  interests: {
-    type: [String],
-  },
-  skills: {
-    type: [String],
-  },
-  projects: {
-    type: [String],
-  },
-  contactInformation: {
+  username: {
     type: String,
   },
-  clubsAndOrgs: {
-    type: [String],
-  },
-  coursesTaken: {
-    type: [String],
-  },
-  hometown: {
-    type: String,
-  },
-  favoriteCampusSpots: {
-    type: [String],
-  },
-  alumniStatus: {
-    type: String,
-  },
-  jobStatus: {
-    type: String,
-  },
-  favoriteArticles: {
-    type: [String],
-  },
-  eventsParticipated: {
-    type: [String],
+  dateJoined: {
+    type: Date,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
