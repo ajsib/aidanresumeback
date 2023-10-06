@@ -4,7 +4,9 @@ const Profile = require('../models/profile');
 // Function to create a user's profile
 exports.createProfile = async (req, res) => {
   const { name, program, yearOfStudy, bio, profilePhoto } = req.body;
-  const user = await User.findById(req.user.userId).select('_id');
+
+  // Note the .select() method now includes 'username' and 'dateJoined'
+  const user = await User.findById(req.user.userId).select('_id username dateJoined');
 
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
@@ -16,8 +18,8 @@ exports.createProfile = async (req, res) => {
     yearOfStudy,
     bio,
     profilePhoto,
-    username: user.username,
-    dateJoined: user.dateJoined,
+    username: user.username,  // This should now be populated
+    dateJoined: user.dateJoined, // This should now be populated
     user: user._id,
   });
 
