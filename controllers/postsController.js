@@ -108,11 +108,11 @@ exports.getPostById = async (req, res) => {
 
 // Get posts for infinite scroll
 exports.getPaginatedPosts = async (req, res) => {
-  const { start = 0, limit = 10 } = req.query;
+  const { start = 0, limit = 29 } = req.query;  // Default limit changed to 11
 
   // Validate query parameters
   const parsedStart = parseInt(start);
-  const parsedLimit = Math.min(21, parseInt(limit));  // Max limit of 21 posts per request
+  const parsedLimit = Math.min(29, parseInt(limit));  // Max limit of 11 posts per request
 
   if (isNaN(parsedStart) || isNaN(parsedLimit)) {
     return res.status(400).json({ error: 'Invalid query parameters' });
@@ -124,7 +124,6 @@ exports.getPaginatedPosts = async (req, res) => {
       .limit(parsedLimit)
       .sort({ datePosted: -1 });
   
-
     res.status(200).json({ 
       posts, 
       nextStart: parsedStart + parsedLimit // useful for infinite scroll
