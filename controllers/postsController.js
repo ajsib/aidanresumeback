@@ -112,7 +112,7 @@ exports.getPaginatedPosts = async (req, res) => {
 
   // Validate query parameters
   const parsedStart = parseInt(start);
-  const parsedLimit = Math.min(20, parseInt(limit));  // Max limit to 12 per query
+  const parsedLimit = Math.min(21, parseInt(limit));  // Max limit of 21 posts per request
 
   if (isNaN(parsedStart) || isNaN(parsedLimit)) {
     return res.status(400).json({ error: 'Invalid query parameters' });
