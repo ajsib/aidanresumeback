@@ -25,22 +25,26 @@ const ProfileSchema = mongoose.Schema({
   dateJoined: {
     type: Date,
   },
-  posts: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
-  }],
-  likes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
-  }],
-  following: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
-  }],
-  followers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
-  }],
+  postInfo: {
+    posts: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    }],
+    likes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    }],
+  },
+  network: {
+    following: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile',
+    }],
+    followers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile',
+    }],
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

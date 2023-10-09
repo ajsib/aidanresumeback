@@ -2,7 +2,6 @@ const Post = require('../models/posts'); // Assuming the Post model file is name
 const User = require('../models/user'); // Import the User model
 const Profile = require('../models/profile'); // Assuming the Profile model file is named 'Profile.js'
 
-// Create a new post
 exports.createPost = async (req, res) => {
   const userId = req.user.userId;
   const {
@@ -18,41 +17,51 @@ exports.createPost = async (req, res) => {
       yearOfStudy,
       program
     }
-  } = req.body;  // Corrected destructuring here
-
-  const newPost = new Post({
-    datePosted: new Date(),
-    front: {
-      headline,
-      hook,
-      callToAction,
-      emoji
-    },
-    back: {
-      authorName,
-      paragraph,
-      yearOfStudy,
-      program
-    },
-    author: userId
-  });
-
-  console.log("New Post: ", newPost); // Debug line
+  } = req.body;
 
   try {
-    await newPost.save();
-    console.log("Post saved"); // Debug line
-
-    await User.findByIdAndUpdate(userId, { $push: { posts: newPost._id } });
-    console.log("User updated"); // Debug line
-
     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const newPost = new Post({
+      datePosted: new Date(),
+      front: {
+        headline,
+        hook,
+        callToAction,
+        emoji
+      },
+      back: {
+        authorName,
+        paragraph,
+        yearOfStudy,
+        program
+      },
+      author: userId
+    });
+
+    // Populate authorProfile from User and Profile models
+    const profile = await Profile.findById(user.profile);
+
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
+    newPost.authorProfile = {
+      username: user.username,
+      emoji: profile.emoji
+    };
+
+    await newPost.save();
+    await User.findByIdAndUpdate(userId, { $push: { posts: newPost._id } });
     await Profile.findByIdAndUpdate(user.profile, { $push: { posts: newPost._id } });
-    console.log("Profile updated"); // Debug line
 
     res.status(201).json(newPost);
   } catch (error) {
     console.error('Error creating the post:', error);
+    console.log('req.body:', req.body);
     res.status(500).json({ error: 'An error occurred while creating the post' });
   }
 };
