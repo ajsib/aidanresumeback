@@ -1,7 +1,8 @@
-const Post = require('../models/posts'); // Assuming the Post model file is named 'Post.js'
-const User = require('../models/user'); // Import the User model
-const Profile = require('../models/profile'); // Assuming the Profile model file is named 'Profile.js'
+const Post = require('../models/posts'); 
+const User = require('../models/user');
+const Profile = require('../models/profile'); 
 
+// create a post
 exports.createPost = async (req, res) => {
   const userId = req.user.userId;
   const {
@@ -39,7 +40,7 @@ exports.createPost = async (req, res) => {
         yearOfStudy,
         program
       },
-      author: userId
+      author: userId,
     });
 
     // Populate authorProfile from User and Profile models
@@ -51,21 +52,21 @@ exports.createPost = async (req, res) => {
 
     newPost.authorProfile = {
       username: user.username,
-      emoji: profile.emoji
+      emoji: profile.emoji,
+      authorID: profile._id
     };
+    console.log(newPost);
 
     await newPost.save();
     await User.findByIdAndUpdate(userId, { $push: { posts: newPost._id } });
-    await Profile.findByIdAndUpdate(user.profile, { $push: { posts: newPost._id } });
+    await Profile.findByIdAndUpdate(user.profile, { $push: { 'postInfo.posts': newPost._id } });
 
     res.status(201).json(newPost);
   } catch (error) {
     console.error('Error creating the post:', error);
-    console.log('req.body:', req.body);
     res.status(500).json({ error: 'An error occurred while creating the post' });
   }
 };
-
 
 // Delete a post
 exports.deletePost = async (req, res) => {

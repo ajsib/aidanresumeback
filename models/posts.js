@@ -16,8 +16,9 @@ const PostSchema = new mongoose.Schema({
   },
   authorProfile: {  
     username: { type: String}, 
-    emoji: { type: String },
+    authorID: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile' }
   },
+  numLikes : { type: Number, default: 0 },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, { timestamps: true });
 
