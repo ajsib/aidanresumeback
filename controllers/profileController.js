@@ -158,6 +158,17 @@ exports.getPaginatedLikes = async (req, res) => {
   const parsedStart = parseInt(start);
   const parsedLimit = parseInt(limit);
 
+  if (isNaN(parsedStart) || isNaN(parsedLimit)) {
+    return res.status(400).json({ message: 'Invalid query parameters' });
+  }
+
+  // Assuming profileId is passed in the request parameters or payload
+  const profileId = req.params.profileId || req.body.profileId;
+  
+  if (!profileId) {
+    return res.status(400).json({ message: 'profileId is required' });
+  }
+
   try {
     const profile = await Profile.findById(profileId)
       .populate({
@@ -165,15 +176,17 @@ exports.getPaginatedLikes = async (req, res) => {
         options: { skip: parsedStart, limit: parsedLimit }
       });
 
-    res.status(200).json({ 
+    res.status(200).json({
       likes: profile.postInfo.likes,
       nextStart: parsedStart + parsedLimit
     });
+
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 // Paginated fetch for following
 exports.getPaginatedFollowing = async (req, res) => {
@@ -221,3 +234,26 @@ exports.getPaginatedFollowers = async (req, res) => {
   }
 };
 
+// Function to get all posts of a user
+exports.getAllPosts = async (req, res) => {
+  const { profileId } = req.params;
+  try {
+    const posts = await Post.find({ profile: profileId }).sort({ datePosted: -1 });
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Function to get all likes of a user
+exports.getAllLikes = async (req, res) => {
+  const { profileId } = req.params;
+  try {
+    const profile = await Profile.findById(profileId).populate('postInfo.likes');
+    return res.status(200).json(profile.postInfo.likes);
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
