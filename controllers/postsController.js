@@ -55,7 +55,6 @@ exports.createPost = async (req, res) => {
       emoji: profile.emoji,
       authorID: profile._id
     };
-    console.log(newPost);
 
     await newPost.save();
     await User.findByIdAndUpdate(userId, { $push: { posts: newPost._id } });

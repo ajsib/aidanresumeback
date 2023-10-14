@@ -6,8 +6,8 @@ const {
     getFullProfile,
     getPaginatedPosts, 
     getPaginatedLikes, 
-    getPaginatedFollowing, 
-    getPaginatedFollowers,
+    // getPaginatedFollowing, 
+    // getPaginatedFollowers,
     likePost,
     getAllPosts,
     getAllLikes
@@ -21,12 +21,9 @@ router.get('/:userId', authenticateToken, getProfile);
 router.get('/full/:profileId', authenticateToken, getFullProfile);
 router.get('/:profileId/posts', authenticateToken, getPaginatedPosts);
 router.get('/:profileId/likes', authenticateToken, getPaginatedLikes);
-router.get('/:profileId/following', authenticateToken, getPaginatedFollowing);
-router.get('/:profileId/followers', authenticateToken, getPaginatedFollowers);
+// router.get('/:profileId/following', authenticateToken, getPaginatedFollowing);
+// router.get('/:profileId/followers', authenticateToken, getPaginatedFollowers);
 router.post('/:profileId/like/:postId', authenticateToken, likePost);
 
-// New routes for getting all posts and all likes
-router.get('/:profileId/posts/all', authenticateToken, getAllPosts);
-router.get('/:profileId/likes/all', authenticateToken, getAllLikes);
 
 module.exports = router;
